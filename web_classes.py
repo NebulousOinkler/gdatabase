@@ -23,3 +23,6 @@ class web_entry:
 	def __init__(self, raw_entries):
 		r = raw_entries
 		self.bib, self.contrib, self.vert, self.edges, self.name = raw_entries
+
+	def display(self):
+		pass
