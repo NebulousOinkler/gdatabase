@@ -1,5 +1,6 @@
 from classes import *
-t = 1968
+import json
+t = 1969
 bib = \
 """
 @article{Sh:1,
@@ -41,7 +42,7 @@ working_entry2 = DBEntry(bib, contrib,9,edges2, name=name)
 
 gdb = GraphDatabase('gdatabase.db')
 gdb.add_entry(working_entry2)
-print(gdb.search('deg_seq','4'))
+print(gdb.search('deg_seq','5')[0].dbref.bib.entries)
 #for bibe in biblist:
 #	gdb.add_entry(DBEntry(bibe, contrib,9,edges2, name=name))
 gdb.close()

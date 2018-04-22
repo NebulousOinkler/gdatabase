@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import bibtexparser as btx
 from bibtexparser.bparser import BibTexParser
 import sqlite3
+import json
 
 class DBGraph(Graph):
 	def __init__(self, data=None, **attr):
@@ -32,6 +33,8 @@ class DBRef:
 	def __init__(self, bib):
 		parser = BibTexParser()
 		self.bib = parser.parse(bib)
+		if not self.bib.entries:
+			self.bib.entries = [json.loads(bib)]
 		self.bib.entries[0].pop('pages',None)
 
 		self.title = self.bib.entries[0]['title']
@@ -49,7 +52,7 @@ class DBEntry:
 		self.dbgraph = easy_graph(graph_description, **kwargs)
 		self.dbref = DBRef(bib)
 
-		parser = BibTexParser()
+		#parser = BibTexParser()
 		# self.links = set()
 		# for link in kwargs.get('links',[]):
 		# 	t = parser.parse(link) 
@@ -63,7 +66,9 @@ class encoder:
 	def encode_edge_list(edges):
 		return ','.join(['-'.join(map(str,e)) for e in edges])
 
-	def encode_bib(bib):
+	def encode_bib(bib, fmt='bibtex'):
+		if fmt == 'json':
+			return json.dumps(bib.entries[0])
 		return btx.dumps(bib)
 
 class decoder:
@@ -133,7 +138,7 @@ class GraphDatabase:
 		ref_result = self.fetch('ref', entry.dbref)
 		#print('BBBBBBBBB', ref_result)
 		if not ref_result:
-			sbib = encoder.encode_bib(entry.dbref.bib)
+			sbib = encoder.encode_bib(entry.dbref.bib, fmt='json')
 			self.max_rid += 1
 			rid = self.max_rid
 			entry.dbref.rid = rid
