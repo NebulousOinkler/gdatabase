@@ -6,10 +6,11 @@ print "</head>"
 print "<body>"
 print "<p>Hello, World.</p>"
 form = cgi.FieldStorage()
-query = form['fname'].value
+query = form['query'].value
+qtype = form['qtype'].value
 from web_classes import web_search
 s = web_search()
-result = s.search('deg_seq',query)
+result = s.search(qtype,query)
 print "<style> b {color: rgb(176,0,0); text-decoration: none;} b:hover {text-decoration: underline;} </style>"
 print "<pre>"
 for r in result:

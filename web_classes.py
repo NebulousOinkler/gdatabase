@@ -6,14 +6,26 @@ class web_search:
 		self.c = self.conn.cursor()
 
 	def search(self,qtype, arg):
-		if qtype == 'deg_seq':
-			like = "'" + arg + "%'"
-			raw_entries = self.c.execute("""SELECT Graphs.gid, GROUP_CONCAT(Refs.bib,'||') AS bib_data, GROUP_CONCAT(GraphRefDetails.contrib, '||') AS contrib_data, Graphs.vert, Graphs.edges, Graphs.name, Graphs.deg_seq FROM GraphRefDetails 
+		result = []
+		select = """SELECT Graphs.gid, GROUP_CONCAT(Refs.bib,'||') AS bib_data, GROUP_CONCAT(GraphRefDetails.contrib, '||') AS contrib_data, Graphs.vert, Graphs.edges, Graphs.name, Graphs.deg_seq FROM GraphRefDetails 
 			INNER JOIN Graphs ON GraphRefDetails.gid = Graphs.gid 
-			INNER JOIN Refs ON GraphRefDetails.rid = Refs.rid 
-			WHERE deg_seq LIKE"""+ like + """GROUP BY Graphs.gid""").fetchall()
-			
+			INNER JOIN Refs ON GraphRefDetails.rid = Refs.rid """
+
+		if qtype == 'deg_seq':
+			like = "'" + arg + "%' "
+			raw_entries = self.c.execute( select + """WHERE Graphs.deg_seq LIKE"""+ like + """GROUP BY Graphs.gid""")
 			result = self.structure(raw_entries)
+			
+		if qtype == 'entry':
+			gid = "'" + str(int(arg[1:])) + "' "
+			raw_entries = self.c.execute( select + """WHERE GraphRefDetails.gid="""+ gid + """GROUP BY Graphs.gid""")
+			result = self.structure(raw_entries)
+		
+		if qtype == 'ref':
+			#Not Yet Implemented
+			#raw_entries = self.c.execute( select + """WHERE Refs.bib LIKE"""+ arg + """GROUP BY Graphs.gid""")
+			#result = self.structure(raw_entries)
+			pass
 
 		return result
 
