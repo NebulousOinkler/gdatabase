@@ -10,7 +10,7 @@
 <form name="form" method="POST" action="cgi-bin/form.cgi">
   <p>
 	<input type="radio" name="qtype" id="deg_seq" value="deg_seq" checked/> By Degree Sequence
-	<input type="radio" name="qtype" id="entry" value="entry"/> By Entry ID
+	<input type="radio" name="qtype" id="graph" value="graph"/> By Graph ID
 	<input type="radio" name="qtype" id="ref" value="ref"/> By Citation
   </p>
   <input type="text" name="query" size=60 id="input" placeholder="4,3,2..."/>
@@ -18,14 +18,14 @@
 </form>
 <script>
 	var deg_seq = document.getElementById("deg_seq")
-	var entry = document.getElementById("entry")
+	var graph = document.getElementById("graph")
 	var ref = document.getElementById("ref")
 	var input = document.getElementById("input")
 
 	deg_seq.onclick = function(){
 		input.placeholder = "4,3,2..."
 	}
-	entry.onclick = function(){
+	graph.onclick = function(){
 		input.placeholder = "G00001"
 	}
 	ref.onclick = function(){
