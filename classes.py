@@ -47,7 +47,7 @@ class DBRef:
 		return self.snippet == other.snippet
 
 class DBEntry:
-	def __init__(self, bib, contrib, num_vert, edges, name='', **kwargs):
+	def __init__(self, bib, pages, contrib, num_vert, edges, name='', **kwargs):
 		graph_description = ['edgelist', name, num_vert, edges]
 		self.dbgraph = easy_graph(graph_description, **kwargs)
 		self.dbref = DBRef(bib)
@@ -59,7 +59,7 @@ class DBEntry:
 		# 	self.links.add(t)
 		self.comments = kwargs.get('comments',None)
 		self.image = kwargs.get('image',None)
-		self.pages = kwargs.get('pages',None)
+		self.pages = pages
 		self.contrib = contrib
 
 class encoder:
@@ -203,11 +203,11 @@ class GraphDatabase:
 	def search(self, qtype, arg):
 		if qtype == 'deg_seq':
 			like = "'" + arg + "%" +"'"
-			raw_entries = self.cursor.execute("""SELECT Refs.bib, GraphRefDetails.contrib, Graphs.vert, Graphs.edges, Graphs.name FROM GraphRefDetails 
+			raw_entries = self.cursor.execute("""SELECT Refs.bib, GraphRefDetails.pages, GraphRefDetails.contrib, Graphs.vert, Graphs.edges, Graphs.name FROM GraphRefDetails 
 											INNER JOIN Graphs ON GraphRefDetails.gid = Graphs.gid 
 											INNER JOIN Refs ON GraphRefDetails.rid = Refs.rid 
 											WHERE deg_seq LIKE"""+' '+like).fetchall()
-			entries = [DBEntry(e[0],e[1],e[2],decoder.decode_edges_str(e[3]), name=e[4]) for e in raw_entries]
+			entries = [DBEntry(e[0],e[1],e[2],e[3],decoder.decode_edges_str(e[4]), name=e[5]) for e in raw_entries]
 
 			return entries
 
