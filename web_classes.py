@@ -55,7 +55,23 @@ class web_entry:
 
 	def display(self):
 		h = html()
-		gid = h.b("ID:")+ "               " + str(self.gid) + "\n"
+		labeled_gid = 'G' + '0'*(6-len(str(self.gid))) + str(self.gid)
+		gid = h.b("ID:")+ "               " + labeled_gid + "\n"
+		name = h.b("Name:") + "             " + str(self.name)+ "\n"
+		verts = h.b("Vertices:")+ "         " + str(self.vert)+ "\n"
+		degseq = h.b("Degree Sequence:") + "  " + str(self.deg_seq)+ "\n"
+		edges = h.b("Edge List:")+ "        " + str(self.edges)+ "\n"
+		references = self._refparse(self.refs)
+		contrib = h.b("Contributors:") + "     " + self.contrib + "\n"
+			
+		txt = gid + name + verts + degseq + edges + references + contrib
+		return txt
+		
+	def full_display(self):
+	#Has Comments, large generated image, and Each Reference should have it's own image
+		h = html()
+		labeled_gid = 'G' + '0'*(6-len(str(self.gid))) + str(self.gid)
+		gid = h.b("ID:")+ "               " + labeled_gid + "\n"
 		name = h.b("Name:") + "             " + str(self.name)+ "\n"
 		verts = h.b("Vertices:")+ "         " + str(self.vert)+ "\n"
 		degseq = h.b("Degree Sequence:") + "  " + str(self.deg_seq)+ "\n"
@@ -66,6 +82,7 @@ class web_entry:
 			
 		txt = gid + name + verts + degseq + edges + references + comments + contrib
 		return txt
+
 	def _commentparse(self, commentlist):
 		h = html()
 		strlist = []
